@@ -1,7 +1,9 @@
-import { Hono } from '../../deps.ts';
+import { Hono } from 'npm:hono';
 import { handleCreateUser, handleGetUser } from './controller.ts';
 
-export const userRoutes = new Hono();
+const userRoutes = new Hono();
 
 userRoutes.post('/', handleCreateUser);
 userRoutes.get('/:id', handleGetUser);
+
+export { userRoutes };
