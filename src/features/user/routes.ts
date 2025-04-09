@@ -1,4 +1,4 @@
-import { Hono } from 'npm:hono';
+import { Hono } from 'hono';
 import { handleCreateUser, handleGetUser } from './controller.ts';
 
 const userRoutes = new Hono();

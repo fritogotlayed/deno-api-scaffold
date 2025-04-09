@@ -1,5 +1,5 @@
 // Drizzle Client Setup
-import { drizzle } from 'npm:drizzle-orm/node-postgres';
+import { drizzle } from 'drizzle-orm/node-postgres';
 import pg from 'pg';
 
 const { Pool } = pg;

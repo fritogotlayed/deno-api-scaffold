@@ -20,7 +20,7 @@
     "@types/pg": "npm:@types/pg@8.11.11",
     "@zaubrik/djwt": "jsr:@zaubrik/djwt@^3.0.2",
     "drizzle-kit": "npm:drizzle-kit@0.30.6",
-    "drizzle-orm": "npm:drizzle-orm@0.41.0",
+    "drizzle-orm": "npm:drizzle-orm@^0.41.0",
     "hono": "npm:hono@4.7.6",
     "pg": "npm:pg@8.14.1",
     "wait-on": "npm:wait-on@8.0.3",
