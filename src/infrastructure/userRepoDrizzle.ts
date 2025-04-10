@@ -1,4 +1,4 @@
-import {eq} from "drizzle-orm";
+import { eq } from 'drizzle-orm';
 import { UserRepository } from '../core/user/userRepo.ts';
 import { db } from '../config/db.ts';
 import { users } from '../db/schema.ts';
@@ -14,10 +14,12 @@ export const userRepoDrizzle: UserRepository = {
     return result[0] ?? null;
   },
   async create(user: Omit<User, 'id'>): Promise<User> {
-    const result = await db.insert(users).values(user).returning({ id: users.id });
+    const result = await db.insert(users).values(user).returning({
+      id: users.id,
+    });
     return {
       id: result[0].id,
-      ...user
+      ...user,
     };
   },
 };

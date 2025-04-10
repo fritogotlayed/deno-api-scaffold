@@ -6,3 +6,8 @@ export const users = pgTable('users', {
   name: text('name').notNull(),
   email: text('email').notNull(),
 });
+
+export const teams = pgTable('teams', {
+  id: uuid('id').primaryKey().notNull().defaultRandom(),
+  name: text('name').notNull(),
+});

@@ -1,7 +1,11 @@
 import { Context } from 'hono';
-import {createUser, getUser, UserExistsError} from '../../core/user/userUseCases.ts';
+import {
+  createUser,
+  getUser,
+  UserExistsError,
+} from '../../core/user/userUseCases.ts';
 import { userRepoDrizzle } from '../../infrastructure/userRepoDrizzle.ts';
-import {z} from "npm:zod@3.24.1";
+import { z } from 'zod';
 
 export const createUserRequestSchema = z.object({
   name: z.string().min(1),

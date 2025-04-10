@@ -1,9 +1,35 @@
 {
-  "id": "07ace21c-7462-49b0-968d-38a5497cb1ea",
-  "prevId": "00000000-0000-0000-0000-000000000000",
+  "id": "5c2dd86c-0c87-4af4-ae59-c595abc549ac",
+  "prevId": "07ace21c-7462-49b0-968d-38a5497cb1ea",
   "version": "7",
   "dialect": "postgresql",
   "tables": {
+    "public.teams": {
+      "name": "teams",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "name": {
+          "name": "name",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
     "public.users": {
       "name": "users",
       "schema": "",

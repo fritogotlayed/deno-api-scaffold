@@ -9,16 +9,17 @@ export class UserExistsError extends Error {
   }
 }
 
-export const createUser = (repo: UserRepository) => async (user: Omit<User, 'id'>) => {
-  // Add business logic, validation, etc.
-  const userWithEmail = await repo.findByEmail(user.email);
+export const createUser =
+  (repo: UserRepository) => async (user: Omit<User, 'id'>) => {
+    // Add business logic, validation, etc.
+    const userWithEmail = await repo.findByEmail(user.email);
 
-  if (userWithEmail) {
-    throw new UserExistsError(user.email);
-  }
+    if (userWithEmail) {
+      throw new UserExistsError(user.email);
+    }
 
-  return await repo.create(user);
-};
+    return await repo.create(user);
+  };
 
 export const getUser = (repo: UserRepository) => async (id: string) => {
   return await repo.findById(id);
