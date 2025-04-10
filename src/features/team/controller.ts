@@ -4,8 +4,9 @@ import {
   getTeam,
   TeamExistsError,
 } from '../../core/team/teamUseCases.ts';
-import { teamRepoDrizzle } from '../../infrastructure/teamRepoDrizzle.ts';
+import { getTeamRepoDrizzle } from '../../infrastructure/teamRepoDrizzle.ts';
 import { z } from 'zod';
+import { getDb } from '../../middlewares/use-drizzle-postgres.ts';
 
 export const createTeamRequestSchema = z.object({
   name: z.string().min(1),
@@ -17,8 +18,9 @@ export const handleCreateTeam = async (c: Context) => {
   if (!parsed.success) {
     return c.text(JSON.stringify(parsed.error), 400);
   }
+  const db = getDb(c);
   try {
-    const createdTeam = await createTeam(teamRepoDrizzle)(parsed.data);
+    const createdTeam = await createTeam(getTeamRepoDrizzle(db))(parsed.data);
     return c.json(createdTeam, 201);
   } catch (error) {
     if (error instanceof TeamExistsError) {
@@ -30,7 +32,8 @@ export const handleCreateTeam = async (c: Context) => {
 
 export const handleGetTeam = async (c: Context) => {
   const id = c.req.param('id');
-  const user = await getTeam(teamRepoDrizzle)(id);
+  const db = getDb(c);
+  const user = await getTeam(getTeamRepoDrizzle(db))(id);
   if (!user) {
     return c.text('Team not found', 404);
   }

@@ -2,6 +2,7 @@
   "tasks": {
     "db:start": "docker compose up -d && deno run --allow-net npm:wait-on tcp:5432 && sleep 1 && deno task tool:drizzle migrate",
     "db:stop": "docker compose down -v",
+    "dev:hooks": "./developer-scripts/install-hooks.sh",
     "dev:start": "deno run --watch --allow-read --allow-env --allow-net --env-file --inspect ./src/main.ts",
     "tool:checks": "deno check . && deno lint && deno fmt --check",
     "tool:drizzle": "deno run -A --node-modules-dir npm:drizzle-kit",
