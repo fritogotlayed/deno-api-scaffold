@@ -27,6 +27,7 @@ describe('team', () => {
     const response = await app.request('http://localhost/teams', {
       method: 'POST',
       body: JSON.stringify({
+        id: 'bacon',
         name: 'Test Team',
       }),
     });
@@ -35,6 +36,7 @@ describe('team', () => {
     expect(response.status).toBe(201);
     const body = await response.json();
     expect(body.id).toBeDefined();
+    expect(body.id).not.toBe('bacon');
     expect(body).toEqual(expect.objectContaining({
       name: 'Test Team',
     }));
