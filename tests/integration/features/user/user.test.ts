@@ -1,8 +1,11 @@
-import { afterAll, beforeAll, describe, it } from '@std/testing/bdd';
+import { afterAll, afterEach, beforeAll, describe, it } from '@std/testing/bdd';
 import { expect } from '@std/expect';
 import { integrationTestSetup } from '../../utilities/index.ts';
 import { Hono } from 'hono';
-import { createDrizzleDbConnection } from '../../../../src/config/db.ts';
+import {
+  createDrizzleDbConnection,
+  usingDbClient,
+} from '../../../../src/config/db.ts';
 import { users } from '../../../../src/db/schema.ts';
 
 describe('user', () => {
@@ -18,6 +21,15 @@ describe('user', () => {
     cleanupCallback = testTeardown;
   });
 
+  afterEach(async () => {
+    // Lazy way to prevent test pollution in these tests. Each test suite
+    // utilizes a different database, so we only need to worry about tables
+    // affected by this test suite.
+    await usingDbClient(async (client) => {
+      await client.query('TRUNCATE TABLE users');
+    });
+  });
+
   afterAll(async () => {
     await cleanupCallback();
   });
@@ -27,7 +39,9 @@ describe('user', () => {
     const response = await app.request('http://localhost/users', {
       method: 'POST',
       body: JSON.stringify({
+        id: 'bacon',
         name: 'Test User',
+        password: 'password',
         email: 'test@example.com',
       }),
     });
@@ -36,10 +50,39 @@ describe('user', () => {
     expect(response.status).toBe(201);
     const body = await response.json();
     expect(body.id).toBeDefined();
+    expect(body.id).not.toBe('bacon');
+    expect(body.password).not.toBeDefined();
     expect(body).toEqual(expect.objectContaining({
       name: 'Test User',
       email: 'test@example.com',
     }));
+  });
+
+  it('Should not create a user when user with email exists', async () => {
+    // Arrange
+    const testUser = {
+      id: crypto.randomUUID(),
+      name: 'Test User',
+      email: 'test@example.com',
+    };
+    const db = createDrizzleDbConnection();
+    await db.insert(users).values({ ...testUser, password: 'password' });
+
+    // Act
+    const response = await app.request('http://localhost/users', {
+      method: 'POST',
+      body: JSON.stringify({
+        id: 'bacon',
+        name: 'Test User',
+        password: 'password',
+        email: 'test@example.com',
+      }),
+    });
+
+    // Assert
+    expect(response.status).toBe(400);
+    const body = await response.text();
+    expect(body).toEqual('User with matching email already exists');
   });
 
   it('Should get a user', async () => {
@@ -50,7 +93,7 @@ describe('user', () => {
       email: 'test@example.com',
     };
     const db = createDrizzleDbConnection();
-    await db.insert(users).values(testUser);
+    await db.insert(users).values({ ...testUser, password: 'password' });
 
     // Act
     const response = await app.request(
@@ -63,6 +106,7 @@ describe('user', () => {
     // Assert
     expect(response.status).toBe(200);
     const body = await response.json();
+    expect(body.password).not.toBeDefined();
     expect(body).toEqual(expect.objectContaining(testUser));
   });
 });

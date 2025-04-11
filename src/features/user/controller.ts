@@ -7,9 +7,11 @@ import {
 import { getUserRepoDrizzle } from '../../infrastructure/userRepoDrizzle.ts';
 import { z } from 'zod';
 import { getDb } from '../../middlewares/use-drizzle-postgres.ts';
+import { mapUserToResponseDto } from './mapper.ts';
 
 export const createUserRequestSchema = z.object({
   name: z.string().min(1),
+  password: z.string().min(1),
   email: z.string().email(),
 });
 
@@ -22,7 +24,7 @@ export const handleCreateUser = async (c: Context) => {
   const db = getDb(c);
   try {
     const createdUser = await createUser(getUserRepoDrizzle(db))(parsed.data);
-    return c.json(createdUser, 201);
+    return c.json(mapUserToResponseDto(createdUser), 201);
   } catch (error) {
     if (error instanceof UserExistsError) {
       return c.text('User with matching email already exists', 400);
@@ -38,5 +40,5 @@ export const handleGetUser = async (c: Context) => {
   if (!user) {
     return c.text('User not found', 404);
   }
-  return c.json(user);
+  return c.json(mapUserToResponseDto(user));
 };
