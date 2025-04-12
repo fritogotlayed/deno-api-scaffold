@@ -5,5 +5,6 @@ curl --request POST \
   --data '{
   "id": "frito",
   "name": "Frito Alline",
+  "password": "example",
   "email": "frito@email.co"
 }'

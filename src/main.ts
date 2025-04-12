@@ -7,6 +7,7 @@ import { userRoutes } from './features/user/routes.ts';
 import { teamRoutes } from './features/team/routes.ts';
 import { useDrizzlePostgres } from './middlewares/use-drizzle-postgres.ts';
 import { DbConnectionOverrides } from './config/db.ts';
+import { membershipRoutes } from './features/membership/routes.ts';
 
 export function createApp(
   {
@@ -25,6 +26,7 @@ export function createApp(
   // Setup routes
   app.route('/users', userRoutes);
   app.route('/teams', teamRoutes);
+  app.route('/', membershipRoutes);
 
   return app;
 }

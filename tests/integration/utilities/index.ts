@@ -57,6 +57,8 @@ async function createTestDb(
 export async function integrationTestSetup() {
   const testDbName = generateTestDbName();
 
+  console.log(`Using test db: ${testDbName}`);
+
   // TODO: ensure these are set when tests are run. Being lazy for noww.
   Deno.env.set('DB_HOST', 'localhost');
   Deno.env.set('DB_PORT', '5432');

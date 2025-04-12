@@ -26,7 +26,7 @@ describe('user', () => {
     // utilizes a different database, so we only need to worry about tables
     // affected by this test suite.
     await usingDbClient(async (client) => {
-      await client.query('TRUNCATE TABLE users');
+      await client.query('TRUNCATE TABLE users, membership, teams');
     });
   });
 

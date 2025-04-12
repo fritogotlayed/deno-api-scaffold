@@ -22,6 +22,13 @@
       "when": 1744401673131,
       "tag": "20250411200113_add-password-to-user",
       "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1744594411390,
+      "tag": "20250414013331_add-membership",
+      "breakpoints": true
     }
   ]
 }
