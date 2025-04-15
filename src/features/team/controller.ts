@@ -31,7 +31,7 @@ export const handleCreateTeam = async (c: Context) => {
 };
 
 export const handleGetTeam = async (c: Context) => {
-  const id = c.req.param('id');
+  const id = c.req.param('teamId');
   const db = getDb(c);
   const user = await getTeam(getTeamRepoDrizzle(db))(id);
   if (!user) {

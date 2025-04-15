@@ -34,7 +34,7 @@ export const handleCreateUser = async (c: Context) => {
 };
 
 export const handleGetUser = async (c: Context) => {
-  const id = c.req.param('id');
+  const id = c.req.param('userId');
   const db = getDb(c);
   const user = await getUser(getUserRepoDrizzle(db))(id);
   if (!user) {

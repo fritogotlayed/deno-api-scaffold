@@ -1,13 +1,13 @@
 // Entry Point
 import 'jsr:@std/dotenv/load';
 import { Hono } from 'hono';
-import { showRoutes } from 'hono/dev';
 import { NodePgDatabase } from 'drizzle-orm/node-postgres';
 import { userRoutes } from './features/user/routes.ts';
 import { teamRoutes } from './features/team/routes.ts';
 import { useDrizzlePostgres } from './middlewares/use-drizzle-postgres.ts';
 import { DbConnectionOverrides } from './config/db.ts';
 import { membershipRoutes } from './features/membership/routes.ts';
+import { displayRoutesTree } from './display-routes-tree.ts';
 
 export function createApp(
   {
@@ -24,8 +24,8 @@ export function createApp(
   app.use(useDrizzlePostgres({ seedDatabase, dbConnectionOverrides }));
 
   // Setup routes
-  app.route('/users', userRoutes);
-  app.route('/teams', teamRoutes);
+  app.route('/', userRoutes);
+  app.route('/', teamRoutes);
   app.route('/', membershipRoutes);
 
   return app;
@@ -33,6 +33,6 @@ export function createApp(
 
 if (import.meta.main) {
   const app = createApp();
-  console.log(showRoutes(app));
+  console.log(displayRoutesTree(app));
   Deno.serve(app.fetch);
 }

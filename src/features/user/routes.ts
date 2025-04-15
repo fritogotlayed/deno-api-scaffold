@@ -3,7 +3,7 @@ import { handleCreateUser, handleGetUser } from './controller.ts';
 
 const userRoutes = new Hono();
 
-userRoutes.post('/', handleCreateUser);
-userRoutes.get('/:id', handleGetUser);
+userRoutes.post('/users', handleCreateUser);
+userRoutes.get('/users/:userId', handleGetUser);
 
 export { userRoutes };
