@@ -1,41 +1,38 @@
 // Drizzle Schema
-import { pgTable, text, timestamp, uuid } from 'drizzle-orm/pg-core';
+import { index, pgTable, text, timestamp, uuid } from 'drizzle-orm/pg-core';
+
+// NOTE: Keeping the exports in here alphabetical for readability/maintainability
+export const address = pgTable('address', {
+  id: uuid('id').primaryKey().notNull().defaultRandom(),
+  hash: text('hash').notNull(),
+  street1: text('street').notNull(),
+  street2: text('street2'),
+  city: text('city').notNull(),
+  state: text('state').notNull(),
+  zip: text('zip').notNull(),
+}, (t) => [
+  index('address_hash_idx').on(t.hash),
+]);
+
+export const membership = pgTable('membership', {
+  userId: uuid('user_id').references(() => users.id).references(() => users.id)
+    .notNull(),
+  teamId: uuid('team_id').references(() => teams.id).references(() => teams.id)
+    .notNull(),
+  created: timestamp('created').notNull().defaultNow(),
+});
+
+export const teams = pgTable('teams', {
+  id: uuid('id').primaryKey().notNull().defaultRandom(),
+  name: text('name').notNull(),
+  addressId: uuid('address_id').references(() => address.id),
+});
 
 export const users = pgTable('users', {
   id: uuid('id').primaryKey().notNull().defaultRandom(),
   name: text('name').notNull(),
   password: text('password').notNull(),
   email: text('email').notNull(),
-});
-
-export const teams = pgTable('teams', {
-  id: uuid('id').primaryKey().notNull().defaultRandom(),
-  name: text('name').notNull(),
-});
-
-export const membership = pgTable('membership', {
-  // NOTE: There are two ways to define foreign keys. One way below if you do not
-  // care about the names.
-  userId: uuid('user_id').references(() => users.id).references(() => users.id)
-    .notNull(),
-  teamId: uuid('team_id').references(() => teams.id).references(() => teams.id)
-    .notNull(),
-  created: timestamp('created').notNull().defaultNow(),
-  // NOTE: This is the second way to define foreign keys. This allows you to define the
-  // name of the foreign key.
-  // userId: uuid('user_id').notNull(),
-  // teamId: uuid('team_id').notNull(),
-  // }, (t) => {
-  // return [
-  //   foreignKey({
-  //     columns: [t.userId],
-  //     foreignColumns: [users.id],
-  //     name: 'fk_membership_user_id',
-  //   }),
-  //   foreignKey({
-  //     columns: [t.teamId],
-  //     foreignColumns: [teams.id],
-  //     name: 'fk_membership_team_id',
-  //   })
-  // ]
-});
+}, (t) => [
+  index('email_index').on(t.email),
+]);

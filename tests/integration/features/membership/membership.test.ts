@@ -119,7 +119,11 @@ describe('membership', () => {
     // Assert
     expect(response.status).toBe(400);
     const body = await response.text();
-    expect(body).toEqual('User with matching email already exists'); // Note: This message should be updated in the controller
+    expect(body).toEqual(
+      JSON.stringify({
+        message: 'Membership with matching details already exists',
+      }),
+    ); // Note: This message should be updated in the controller
   });
 
   it('Should get a membership via users/:userId/teams/:teamId endpoint', async () => {
@@ -188,6 +192,6 @@ describe('membership', () => {
     // Assert
     expect(response.status).toBe(404);
     const body = await response.text();
-    expect(body).toEqual('Membership not found');
+    expect(body).toEqual(JSON.stringify({ message: 'Membership not found' }));
   });
 });

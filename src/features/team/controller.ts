@@ -9,6 +9,7 @@ import { getDb } from '../../middlewares/use-drizzle-postgres.ts';
 import { CreateTeamRequestSchema, TeamResponseSchema } from './schema.ts';
 import { validateResponseAgainstSchema } from '../../shared/schema-validation/validate-response-against-schema.ts';
 import { ErrorResponseSchema } from '../../shared/schema/error-response.ts';
+import { getAddressRepoDrizzle } from '../../infrastructure/addressRepoDrizzle.ts';
 
 export const handleCreateTeam = async (c: Context) => {
   const body = await c.req.json();
@@ -21,7 +22,10 @@ export const handleCreateTeam = async (c: Context) => {
   }
   const db = getDb(c);
   try {
-    const createdTeam = await createTeam(getTeamRepoDrizzle(db))(parsed.data);
+    const createdTeam = await createTeam({
+      teamRepo: getTeamRepoDrizzle(db),
+      addressRepo: getAddressRepoDrizzle(db),
+    })(parsed.data);
     return c.json(
       validateResponseAgainstSchema(
         TeamResponseSchema,

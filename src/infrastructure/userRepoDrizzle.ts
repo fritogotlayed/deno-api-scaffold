@@ -21,8 +21,8 @@ export function getUserRepoDrizzle(db: NodePgDatabase): UserRepository {
         id: users.id,
       });
       return {
-        id: result[0].id,
         ...user,
+        id: result[0].id,
       };
     },
   } satisfies UserRepository;

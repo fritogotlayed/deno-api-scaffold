@@ -9,6 +9,7 @@ import { DbConnectionOverrides } from './config/db.ts';
 import { membershipRoutes } from './features/membership/routes.ts';
 // import { displayRoutesTree } from './display-routes-tree.ts';
 import { createOpenApiApp } from './shared/schema-validation/create-open-api-app.ts';
+import { addressRoutes } from './features/address/routes.ts';
 
 export function createApp(
   {
@@ -28,6 +29,7 @@ export function createApp(
   app.route('/', userRoutes);
   app.route('/', teamRoutes);
   app.route('/', membershipRoutes);
+  app.route('/', addressRoutes);
 
   return app;
 }

@@ -25,8 +25,13 @@ export function validateResponseAgainstSchema<T>(
   schema: z.ZodSchema,
   result: T,
 ) {
+  // NOTE: We could also use the .strip method of zod to ensure that our result
+  // is stripped of any extra attributes. This could be useful in place of the
+  // current mapper solution. Performance has not been testing so I have not
+  // included it in this example / scaffold.
+
   if (isDevelopment || isTest) {
-    const parsed = schema.safeParse(result);
+    const parsed = schema.safeParse(result, {});
     if (!parsed.success) {
       if (isDevelopment) {
         console.log('----- WARNING -----');
