@@ -1,11 +1,141 @@
-import { Hono } from 'hono';
+import { createRoute } from '@hono/zod-openapi';
 import { handleCreateMembership, handleGetMembership } from './controller.ts';
+import { createOpenApiApp } from '../../shared/schema-validation/create-open-api-app.ts';
+import { MembershipResponseSchema, ParamsSchema } from './schema.ts';
+import { ErrorResponseSchema } from '../../shared/schema/error-response.ts';
 
-const membershipRoutes = new Hono();
+// NOTE: This, and other routes, can likely be made less "wordy" by utilizing some
+// helper functions to build the argument for the createRoute function.
+const membershipRoutes = createOpenApiApp();
 
-membershipRoutes.post('/users/:userId/teams/:teamId', handleCreateMembership);
-membershipRoutes.post('/teams/:teamId/users/:userId', handleCreateMembership);
-membershipRoutes.get('/users/:userId/teams/:teamId', handleGetMembership);
-membershipRoutes.get('/teams/:teamId/users/:userId', handleGetMembership);
+membershipRoutes
+  .openapi(
+    createRoute({
+      method: 'post',
+      path: '/users/:userId/teams/:teamId',
+      tags: ['Membership'],
+      middleware: [
+        // TODO: any request specific middleware goes here. Think things like id converters
+      ] as const,
+      request: {
+        params: ParamsSchema,
+      },
+      responses: {
+        201: {
+          description: 'Membership created',
+          content: {
+            'application/json': {
+              schema: MembershipResponseSchema,
+            },
+          },
+        },
+        400: {
+          description: 'Bad request',
+          content: {
+            'application/json': {
+              schema: ErrorResponseSchema,
+            },
+          },
+        },
+      },
+    }),
+    handleCreateMembership,
+  )
+  .openapi(
+    createRoute({
+      method: 'post',
+      path: '/teams/:teamId/users/:userId',
+      tags: ['Membership'],
+      middleware: [
+        // TODO: any request specific middleware goes here. Think things like id converters
+      ] as const,
+      request: {
+        params: ParamsSchema,
+      },
+      responses: {
+        201: {
+          description: 'Membership created',
+          content: {
+            'application/json': {
+              schema: MembershipResponseSchema,
+            },
+          },
+        },
+        400: {
+          description: 'Bad request',
+          content: {
+            'application/json': {
+              schema: ErrorResponseSchema,
+            },
+          },
+        },
+      },
+    }),
+    handleCreateMembership,
+  )
+  .openapi(
+    createRoute({
+      method: 'get',
+      path: '/users/:userId/teams/:teamId',
+      tags: ['Membership'],
+      middleware: [
+        // TODO: any request specific middleware goes here. Think things like id converters
+      ] as const,
+      request: {
+        params: ParamsSchema,
+      },
+      responses: {
+        200: {
+          description: 'Membership found',
+          content: {
+            'application/json': {
+              schema: MembershipResponseSchema,
+            },
+          },
+        },
+        404: {
+          description: 'Membership not found',
+          content: {
+            'application/json': {
+              schema: ErrorResponseSchema,
+            },
+          },
+        },
+      },
+    }),
+    handleGetMembership,
+  )
+  .openapi(
+    createRoute({
+      method: 'get',
+      path: '/teams/:teamId/users/:userId',
+      tags: ['Membership'],
+      middleware: [
+        // TODO: any request specific middleware goes here. Think things like id converters
+      ] as const,
+      request: {
+        params: ParamsSchema,
+      },
+      responses: {
+        200: {
+          description: 'Membership found',
+          content: {
+            'application/json': {
+              schema: MembershipResponseSchema,
+            },
+          },
+        },
+        404: {
+          description: 'Membership not found',
+          content: {
+            'application/json': {
+              schema: ErrorResponseSchema,
+            },
+          },
+        },
+      },
+    }),
+    handleGetMembership,
+  );
 
 export { membershipRoutes };

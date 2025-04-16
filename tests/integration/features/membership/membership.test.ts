@@ -7,8 +7,8 @@ import {
   it,
 } from '@std/testing/bdd';
 import { expect } from '@std/expect';
+import { OpenAPIHono } from '@hono/zod-openapi';
 import { integrationTestSetup } from '../../utilities/index.ts';
-import { Hono } from 'hono';
 import {
   createDrizzleDbConnection,
   usingDbClient,
@@ -16,7 +16,7 @@ import {
 import { teams, users } from '../../../../src/db/schema.ts';
 
 describe('membership', () => {
-  let app: Hono;
+  let app: OpenAPIHono;
   let cleanupCallback: () => Promise<void>;
   let testUser: { id: string; name: string; email: string };
   let testTeam: { id: string; name: string };

@@ -1,13 +1,14 @@
 // Entry Point
-import 'jsr:@std/dotenv/load';
-import { Hono } from 'hono';
+import '@std/dotenv/load';
+import { swaggerUI } from '@hono/swagger-ui';
 import { NodePgDatabase } from 'drizzle-orm/node-postgres';
 import { userRoutes } from './features/user/routes.ts';
 import { teamRoutes } from './features/team/routes.ts';
 import { useDrizzlePostgres } from './middlewares/use-drizzle-postgres.ts';
 import { DbConnectionOverrides } from './config/db.ts';
 import { membershipRoutes } from './features/membership/routes.ts';
-import { displayRoutesTree } from './display-routes-tree.ts';
+// import { displayRoutesTree } from './display-routes-tree.ts';
+import { createOpenApiApp } from './shared/schema-validation/create-open-api-app.ts';
 
 export function createApp(
   {
@@ -18,7 +19,7 @@ export function createApp(
     dbConnectionOverrides?: DbConnectionOverrides;
   } = {},
 ) {
-  const app = new Hono();
+  const app = createOpenApiApp();
 
   // Setup dependencies / middlewares
   app.use(useDrizzlePostgres({ seedDatabase, dbConnectionOverrides }));
@@ -32,7 +33,35 @@ export function createApp(
 }
 
 if (import.meta.main) {
+  const [isTestEnv, isDevelopmentEnv] = [
+    Deno.env.get('NODE_ENV') === 'test',
+    Deno.env.get('NODE_ENV') === 'development',
+  ];
+
   const app = createApp();
-  console.log(displayRoutesTree(app));
+  if (isTestEnv) {
+    console.log(
+      'Cannot display routes tree with a Hono Open API application currently.',
+    );
+    // console.log(displayRoutesTree(app));
+  }
+
+  if (isDevelopmentEnv) {
+    app.get(
+      '/ui',
+      swaggerUI({
+        url: '/doc',
+      }),
+    );
+
+    app.doc('/doc', {
+      info: {
+        title: 'Runbook Buddy API',
+        description: 'API for Runbook Buddy',
+        version: '0.0.1',
+      },
+      openapi: '3.1.0',
+    });
+  }
   Deno.serve(app.fetch);
 }

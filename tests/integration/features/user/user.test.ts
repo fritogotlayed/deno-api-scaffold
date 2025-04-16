@@ -1,7 +1,7 @@
 import { afterAll, afterEach, beforeAll, describe, it } from '@std/testing/bdd';
 import { expect } from '@std/expect';
+import { OpenAPIHono } from '@hono/zod-openapi';
 import { integrationTestSetup } from '../../utilities/index.ts';
-import { Hono } from 'hono';
 import {
   createDrizzleDbConnection,
   usingDbClient,
@@ -9,7 +9,7 @@ import {
 import { users } from '../../../../src/db/schema.ts';
 
 describe('user', () => {
-  let app: Hono;
+  let app: OpenAPIHono;
   let cleanupCallback: () => Promise<void>;
 
   beforeAll(async () => {
@@ -81,8 +81,10 @@ describe('user', () => {
 
     // Assert
     expect(response.status).toBe(400);
-    const body = await response.text();
-    expect(body).toEqual('User with matching email already exists');
+    const body = await response.json();
+    expect(body).toEqual({
+      message: 'User with matching email already exists',
+    });
   });
 
   it('Should get a user', async () => {

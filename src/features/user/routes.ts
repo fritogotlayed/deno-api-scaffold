@@ -1,9 +1,86 @@
-import { Hono } from 'hono';
+import { createRoute } from '@hono/zod-openapi';
 import { handleCreateUser, handleGetUser } from './controller.ts';
+import { createOpenApiApp } from '../../shared/schema-validation/create-open-api-app.ts';
+import {
+  CreateUserRequestSchema,
+  ParamsSchema,
+  UserResponseSchema,
+} from './schema.ts';
+import { ErrorResponseSchema } from '../../shared/schema/error-response.ts';
 
-const userRoutes = new Hono();
+const userRoutes = createOpenApiApp();
 
-userRoutes.post('/users', handleCreateUser);
-userRoutes.get('/users/:userId', handleGetUser);
+userRoutes
+  .openapi(
+    createRoute({
+      method: 'post',
+      path: '/users',
+      tags: ['User'],
+      middleware: [
+        // TODO: any request specific middleware goes here. Think things like id converters
+      ] as const,
+      request: {
+        body: {
+          description: 'Creates a new user in the system',
+          content: {
+            'application/json': {
+              schema: CreateUserRequestSchema,
+            },
+          },
+        },
+      },
+      responses: {
+        201: {
+          description: 'User created',
+          content: {
+            'application/json': {
+              schema: UserResponseSchema,
+            },
+          },
+        },
+        400: {
+          description: 'Bad request',
+          content: {
+            'application/json': {
+              schema: ErrorResponseSchema,
+            },
+          },
+        },
+      },
+    }),
+    handleCreateUser,
+  )
+  .openapi(
+    createRoute({
+      method: 'get',
+      path: '/users/:userId',
+      tags: ['User'],
+      middleware: [
+        // TODO: any request specific middleware goes here. Think things like id converters
+      ] as const,
+      request: {
+        params: ParamsSchema,
+      },
+      responses: {
+        200: {
+          description: 'User found',
+          content: {
+            'application/json': {
+              schema: UserResponseSchema,
+            },
+          },
+        },
+        404: {
+          description: 'User not found',
+          content: {
+            'application/json': {
+              schema: ErrorResponseSchema,
+            },
+          },
+        },
+      },
+    }),
+    handleGetUser,
+  );
 
 export { userRoutes };

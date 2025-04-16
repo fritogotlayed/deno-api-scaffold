@@ -7,6 +7,8 @@ interface DisplayRoutesTreeOptions {
   headerText?: string;
 }
 
+// TODO: Get this to work for OpenAPIHono apps as well.
+
 /**
  * Displays the routes tree of a Hono app.
  * @param app - The Hono app instance.

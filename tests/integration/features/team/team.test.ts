@@ -1,12 +1,12 @@
 import { afterAll, beforeAll, describe, it } from '@std/testing/bdd';
 import { expect } from '@std/expect';
+import { OpenAPIHono } from '@hono/zod-openapi';
 import { integrationTestSetup } from '../../utilities/index.ts';
-import { Hono } from 'hono';
 import { createDrizzleDbConnection } from '../../../../src/config/db.ts';
 import { teams } from '../../../../src/db/schema.ts';
 
 describe('team', () => {
-  let app: Hono;
+  let app: OpenAPIHono;
   let cleanupCallback: () => Promise<void>;
 
   beforeAll(async () => {
