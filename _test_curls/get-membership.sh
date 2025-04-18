@@ -1,5 +1,5 @@
-export TEAM_ID=18d364cc-9064-4ae3-ac4b-00b42b472d3f
-export USER_ID=fcfe4773-6edb-453d-98ee-3527fa88f157
+export TEAM_ID=ebcf7d0d-3230-4381-8303-7c0fa9956bab
+export USER_ID=8d093a47-7b71-4d49-99a3-743e86390e91
 
 curl --request GET \
   -i \

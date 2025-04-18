@@ -1,15 +1,19 @@
 import { z } from '@hono/zod-openapi';
-import { AddressResponseSchema } from './schema.ts';
 import { Address } from '../../core/address/addressTypes.ts';
+import { AddressResponseFragment } from '../schema/address.ts';
+
+export type AddressResponseFragmentDTO = z.infer<
+  typeof AddressResponseFragment
+>;
 
 /**
  * Maps a User domain entity to a UserResponseDto
  */
-export function mapAddressToResponseDto(
+export function mapAddressToResponseFragmentDto(
   address: Address,
-): z.infer<typeof AddressResponseSchema> {
+): AddressResponseFragmentDTO {
   return {
-    id: address.id,
+    // id: address.id,
     street1: address.street1,
     street2: address.street2,
     city: address.city,

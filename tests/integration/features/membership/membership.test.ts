@@ -13,7 +13,7 @@ import {
   createDrizzleDbConnection,
   usingDbClient,
 } from '../../../../src/config/db.ts';
-import { teams, users } from '../../../../src/db/schema.ts';
+import { membership, teams, users } from '../../../../src/db/schema.ts';
 
 describe('membership', () => {
   let app: OpenAPIHono;
@@ -59,13 +59,15 @@ describe('membership', () => {
     await cleanupCallback();
   });
 
-  it('Should create a membership via users/:userId/teams/:teamId endpoint', async () => {
+  it('Should create a membership via users/:userId/memberships endpoint', async () => {
     // Act
     const response = await app.request(
-      `http://localhost/users/${testUser.id}/teams/${testTeam.id}`,
+      `http://localhost/users/${testUser.id}/memberships`,
       {
         method: 'POST',
-        body: JSON.stringify({}), // Empty body as per schema
+        body: JSON.stringify({
+          teamId: testTeam.id,
+        }),
       },
     );
 
@@ -78,13 +80,15 @@ describe('membership', () => {
     }));
   });
 
-  it('Should create a membership via teams/:teamId/users/:userId endpoint', async () => {
+  it('Should create a membership via teams/:teamId/memberships endpoint', async () => {
     // Act
     const response = await app.request(
-      `http://localhost/teams/${testTeam.id}/users/${testUser.id}`,
+      `http://localhost/teams/${testTeam.id}/memberships`,
       {
         method: 'POST',
-        body: JSON.stringify({}), // Empty body as per schema
+        body: JSON.stringify({
+          userId: testUser.id,
+        }),
       },
     );
 
@@ -99,20 +103,20 @@ describe('membership', () => {
 
   it('Should not create a membership when it already exists', async () => {
     // Arrange - First create the membership
-    await app.request(
-      `http://localhost/users/${testUser.id}/teams/${testTeam.id}`,
-      {
-        method: 'POST',
-        body: JSON.stringify({}),
-      },
-    );
+    const db = createDrizzleDbConnection();
+    await db.insert(membership).values({
+      userId: testUser.id,
+      teamId: testTeam.id,
+    });
 
     // Act - Try to create it again
     const response = await app.request(
-      `http://localhost/users/${testUser.id}/teams/${testTeam.id}`,
+      `http://localhost/users/${testUser.id}/memberships`,
       {
         method: 'POST',
-        body: JSON.stringify({}),
+        body: JSON.stringify({
+          teamId: testTeam.id,
+        }),
       },
     );
 
@@ -128,13 +132,11 @@ describe('membership', () => {
 
   it('Should get a membership via users/:userId/teams/:teamId endpoint', async () => {
     // Arrange - Create the membership first
-    await app.request(
-      `http://localhost/users/${testUser.id}/teams/${testTeam.id}`,
-      {
-        method: 'POST',
-        body: JSON.stringify({}),
-      },
-    );
+    const db = createDrizzleDbConnection();
+    await db.insert(membership).values({
+      userId: testUser.id,
+      teamId: testTeam.id,
+    });
 
     // Act
     const response = await app.request(
@@ -155,13 +157,11 @@ describe('membership', () => {
 
   it('Should get a membership via teams/:teamId/users/:userId endpoint', async () => {
     // Arrange - Create the membership first
-    await app.request(
-      `http://localhost/teams/${testTeam.id}/users/${testUser.id}`,
-      {
-        method: 'POST',
-        body: JSON.stringify({}),
-      },
-    );
+    const db = createDrizzleDbConnection();
+    await db.insert(membership).values({
+      userId: testUser.id,
+      teamId: testTeam.id,
+    });
 
     // Act
     const response = await app.request(
@@ -180,10 +180,25 @@ describe('membership', () => {
     }));
   });
 
-  it('Should return 404 when getting a non-existent membership', async () => {
+  it('Should return 404 when getting a non-existent membership user focused', async () => {
     // Act
     const response = await app.request(
       `http://localhost/users/${testUser.id}/teams/${testTeam.id}`,
+      {
+        method: 'GET',
+      },
+    );
+
+    // Assert
+    expect(response.status).toBe(404);
+    const body = await response.text();
+    expect(body).toEqual(JSON.stringify({ message: 'Membership not found' }));
+  });
+
+  it('Should return 404 when getting a non-existent membership team focused', async () => {
+    // Act
+    const response = await app.request(
+      `http://localhost/teams/${testTeam.id}/users/${testUser.id}`,
       {
         method: 'GET',
       },

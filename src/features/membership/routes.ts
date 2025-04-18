@@ -1,7 +1,16 @@
 import { createRoute } from '@hono/zod-openapi';
-import { handleCreateMembership, handleGetMembership } from './controller.ts';
+import {
+  handleAddTeamToUser,
+  handleAddUserToTeam,
+  handleGetMembership,
+} from './controller.ts';
 import { createOpenApiApp } from '../../shared/schema-validation/create-open-api-app.ts';
-import { MembershipResponseSchema, ParamsSchema } from './schema.ts';
+import {
+  MembershipResponseSchema,
+  TeamIdParamsSchema,
+  UserAndTeamIdsParamsSchema,
+  UserIdParamsSchema,
+} from './schema.ts';
 import { ErrorResponseSchema } from '../../shared/schema/error-response.ts';
 
 // NOTE: This, and other routes, can likely be made less "wordy" by utilizing some
@@ -12,13 +21,13 @@ membershipRoutes
   .openapi(
     createRoute({
       method: 'post',
-      path: '/users/:userId/teams/:teamId',
+      path: '/users/:userId/memberships',
       tags: ['Membership'],
       middleware: [
         // TODO: any request specific middleware goes here. Think things like id converters
       ] as const,
       request: {
-        params: ParamsSchema,
+        params: UserIdParamsSchema,
       },
       responses: {
         201: {
@@ -39,18 +48,18 @@ membershipRoutes
         },
       },
     }),
-    handleCreateMembership,
+    handleAddTeamToUser,
   )
   .openapi(
     createRoute({
       method: 'post',
-      path: '/teams/:teamId/users/:userId',
+      path: '/teams/:teamId/memberships',
       tags: ['Membership'],
       middleware: [
         // TODO: any request specific middleware goes here. Think things like id converters
       ] as const,
       request: {
-        params: ParamsSchema,
+        params: TeamIdParamsSchema,
       },
       responses: {
         201: {
@@ -71,7 +80,7 @@ membershipRoutes
         },
       },
     }),
-    handleCreateMembership,
+    handleAddUserToTeam,
   )
   .openapi(
     createRoute({
@@ -82,7 +91,7 @@ membershipRoutes
         // TODO: any request specific middleware goes here. Think things like id converters
       ] as const,
       request: {
-        params: ParamsSchema,
+        params: UserAndTeamIdsParamsSchema,
       },
       responses: {
         200: {
@@ -114,7 +123,7 @@ membershipRoutes
         // TODO: any request specific middleware goes here. Think things like id converters
       ] as const,
       request: {
-        params: ParamsSchema,
+        params: UserAndTeamIdsParamsSchema,
       },
       responses: {
         200: {

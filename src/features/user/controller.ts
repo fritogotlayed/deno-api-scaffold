@@ -26,7 +26,7 @@ export const handleCreateUser = async (c: Context) => {
     return c.json(
       validateResponseAgainstSchema(
         UserResponseSchema,
-        mapUserToResponseDto(createdUser),
+        mapUserToResponseDto({ user: createdUser }),
       ),
       201,
     );
@@ -59,7 +59,7 @@ export const handleGetUser = async (c: Context) => {
   return c.json(
     validateResponseAgainstSchema(
       UserResponseSchema,
-      mapUserToResponseDto(user),
+      mapUserToResponseDto({ user }),
     ),
     200,
   );

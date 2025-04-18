@@ -24,7 +24,10 @@ export const createTeam = (
     addressRepo: AddressRepository;
   },
 ) =>
-async (team: Omit<Team, 'id'>) => {
+async (
+  team: Omit<Team, 'id'>,
+  { address }: { address?: Omit<Address, 'id' | 'hash'> } = {},
+) => {
   // Add business logic, validation, etc.
   const teamWithName = await teamRepo.findByName(team.name);
 
@@ -32,19 +35,19 @@ async (team: Omit<Team, 'id'>) => {
     throw new TeamExistsError(team.name);
   }
 
-  let address: Address | null | undefined;
+  let teamAddress: Address | null | undefined;
   if (team.addressId) {
-    address = await addressRepo.findById(team.addressId);
-    if (!address) {
+    teamAddress = await addressRepo.findById(team.addressId);
+    if (!teamAddress) {
       throw new InvalidAddressError(
         'Unable to find address with id: ' + team.addressId,
       );
     }
   }
 
-  if (team.address) {
-    address = await createAddress(addressRepo)(team.address);
-    team.addressId = address.id;
+  if (address) {
+    teamAddress = await createAddress(addressRepo)(address);
+    team.addressId = teamAddress.id;
   }
 
   return await teamRepo.create(team);

@@ -10,6 +10,9 @@ import { CreateTeamRequestSchema, TeamResponseSchema } from './schema.ts';
 import { validateResponseAgainstSchema } from '../../shared/schema-validation/validate-response-against-schema.ts';
 import { ErrorResponseSchema } from '../../shared/schema/error-response.ts';
 import { getAddressRepoDrizzle } from '../../infrastructure/addressRepoDrizzle.ts';
+import { mapTeamToResponseDto } from './mapper.ts';
+import { getAddressById } from '../../core/address/addressUseCases.ts';
+import { Address } from '../../core/address/addressTypes.ts';
 
 export const handleCreateTeam = async (c: Context) => {
   const body = await c.req.json();
@@ -25,11 +28,17 @@ export const handleCreateTeam = async (c: Context) => {
     const createdTeam = await createTeam({
       teamRepo: getTeamRepoDrizzle(db),
       addressRepo: getAddressRepoDrizzle(db),
-    })(parsed.data);
+    })(parsed.data, { address: parsed.data.address });
+    let address: Address | null | undefined;
+    if (createdTeam.addressId) {
+      address = await getAddressById(getAddressRepoDrizzle(db))(
+        createdTeam.addressId,
+      );
+    }
     return c.json(
       validateResponseAgainstSchema(
         TeamResponseSchema,
-        createdTeam,
+        mapTeamToResponseDto({ team: createdTeam, address }),
       ),
       201,
     );
@@ -58,8 +67,19 @@ export const handleGetTeam = async (c: Context) => {
       404,
     );
   }
+
+  let address: Address | null | undefined;
+  if (team.addressId) {
+    address = await getAddressById(getAddressRepoDrizzle(db))(
+      team.addressId,
+    );
+  }
+
   return c.json(
-    validateResponseAgainstSchema(TeamResponseSchema, team),
+    validateResponseAgainstSchema(
+      TeamResponseSchema,
+      mapTeamToResponseDto({ team, address }),
+    ),
     200,
   );
 };

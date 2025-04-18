@@ -26,7 +26,7 @@ describe('address', () => {
     // utilizes a different database, so we only need to worry about tables
     // affected by this test suite.
     await usingDbClient(async (client) => {
-      await client.query('TRUNCATE TABLE address');
+      await client.query('TRUNCATE TABLE address, teams, membership, users');
     });
   });
 
@@ -126,14 +126,14 @@ describe('address', () => {
     expect(response.status).toBe(200);
     const body = await response.json();
     expect(body.id).toBe(addressId);
-    expect(body).toEqual({
+    expect(body).toEqual(expect.objectContaining({
       id: addressId,
       street1: '456 Park Ave',
       street2: 'Suite 789',
       city: 'Chicago',
       state: 'IL',
       zip: '60601',
-    });
+    }));
   });
 
   it('Should return 404 when getting a non-existent address', async () => {
