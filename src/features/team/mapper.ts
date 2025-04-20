@@ -6,12 +6,17 @@ import {
   AddressResponseFragmentDTO,
   mapAddressToResponseFragmentDto,
 } from '../../shared/address/mapper.ts';
+import { FeatureFlagsClient } from '../../feature-flags-client.ts';
 
 export type TeamResponseDto = z.infer<typeof TeamResponseSchema>;
 
-export function mapTeamToResponseDto(
+export async function mapTeamToResponseDto(
   { team, address }: { team: Team; address?: Address | null },
-): TeamResponseDto {
+): Promise<TeamResponseDto> {
+  const useHateoasLinks = await FeatureFlagsClient.getFeatureFlagEnabled(
+    'hateoas-links',
+  );
+
   const _links: TeamResponseDto['_links'] = {
     self: {
       href: `/teams/${team.id}`,
@@ -35,6 +40,6 @@ export function mapTeamToResponseDto(
     id: team.id,
     name: team.name,
     address: addressDTO,
-    _links,
+    _links: useHateoasLinks ? _links : undefined,
   };
 }

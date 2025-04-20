@@ -24,10 +24,12 @@ const createTeamMembership = async (
       teamId,
       userId,
     });
+
+    const membershipDto = await mapMembershipToResponseDto(membership);
     return c.json(
       validateResponseAgainstSchema(
         MembershipResponseSchema,
-        mapMembershipToResponseDto(membership),
+        membershipDto,
       ),
       201,
     );
@@ -96,10 +98,11 @@ export const handleGetMembership = async (c: Context) => {
     );
   }
 
+  const membershipDto = await mapMembershipToResponseDto(membership);
   return c.json(
     validateResponseAgainstSchema(
       MembershipResponseSchema,
-      mapMembershipToResponseDto(membership),
+      membershipDto,
     ),
     200,
   );

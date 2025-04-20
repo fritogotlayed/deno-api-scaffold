@@ -23,11 +23,9 @@ export const handleCreateUser = async (c: Context) => {
   const db = getDb(c);
   try {
     const createdUser = await createUser(getUserRepoDrizzle(db))(parsed.data);
+    const userDto = await mapUserToResponseDto({ user: createdUser });
     return c.json(
-      validateResponseAgainstSchema(
-        UserResponseSchema,
-        mapUserToResponseDto({ user: createdUser }),
-      ),
+      validateResponseAgainstSchema(UserResponseSchema, userDto),
       201,
     );
   } catch (error) {
@@ -56,11 +54,10 @@ export const handleGetUser = async (c: Context) => {
       404,
     );
   }
+
+  const userDto = await mapUserToResponseDto({ user: user });
   return c.json(
-    validateResponseAgainstSchema(
-      UserResponseSchema,
-      mapUserToResponseDto({ user }),
-    ),
+    validateResponseAgainstSchema(UserResponseSchema, userDto),
     200,
   );
 };

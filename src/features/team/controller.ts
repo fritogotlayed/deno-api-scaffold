@@ -35,11 +35,9 @@ export const handleCreateTeam = async (c: Context) => {
         createdTeam.addressId,
       );
     }
+    const teamDto = await mapTeamToResponseDto({ team: createdTeam, address });
     return c.json(
-      validateResponseAgainstSchema(
-        TeamResponseSchema,
-        mapTeamToResponseDto({ team: createdTeam, address }),
-      ),
+      validateResponseAgainstSchema(TeamResponseSchema, teamDto),
       201,
     );
   } catch (error) {
@@ -75,11 +73,9 @@ export const handleGetTeam = async (c: Context) => {
     );
   }
 
+  const teamDto = await mapTeamToResponseDto({ team, address });
   return c.json(
-    validateResponseAgainstSchema(
-      TeamResponseSchema,
-      mapTeamToResponseDto({ team, address }),
-    ),
+    validateResponseAgainstSchema(TeamResponseSchema, teamDto),
     200,
   );
 };

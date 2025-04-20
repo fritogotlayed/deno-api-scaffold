@@ -1,6 +1,7 @@
 import { z } from '@hono/zod-openapi';
 import { Membership } from '../../core/membership/membershipTypes.ts';
 import { MembershipResponseSchema } from './schema.ts';
+import { FeatureFlagsClient } from '../../feature-flags-client.ts';
 
 // Define the shape of your DTO
 export type MembershipResponseDto = z.infer<typeof MembershipResponseSchema>;
@@ -8,9 +9,13 @@ export type MembershipResponseDto = z.infer<typeof MembershipResponseSchema>;
 /**
  * Maps a Membership domain entity to a MembershipResponseDto
  */
-export function mapMembershipToResponseDto(
+export async function mapMembershipToResponseDto(
   membership: Membership,
-): MembershipResponseDto {
+): Promise<MembershipResponseDto> {
+  const useHateoasLinks = await FeatureFlagsClient.getFeatureFlagEnabled(
+    'hateoas-links',
+  );
+
   const _links: MembershipResponseDto['_links'] = {
     self: {
       href: `/users/${membership.userId}/memberships/${membership.teamId}`,
@@ -32,6 +37,6 @@ export function mapMembershipToResponseDto(
     userId: membership.userId,
     teamId: membership.teamId,
     created: membership.created.toISOString(),
-    _links,
+    _links: useHateoasLinks ? _links : undefined,
   };
 }

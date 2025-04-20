@@ -9,7 +9,7 @@ import {
   InvalidAddressError,
 } from '../../core/address/addressUseCases.ts';
 import { getAddressRepoDrizzle } from '../../infrastructure/addressRepoDrizzle.ts';
-import { mapAddressToResponseDto } from './mappers.ts';
+import { mapAddressToResponseDto } from './mapper.ts';
 
 export const handleAddressCreate = async (c: Context) => {
   const body = await c.req.json();
@@ -26,10 +26,12 @@ export const handleAddressCreate = async (c: Context) => {
     const createdAddress = await createAddress(getAddressRepoDrizzle(db))(
       parsed.data,
     );
+
+    const addressDto = await mapAddressToResponseDto(createdAddress);
     return c.json(
       validateResponseAgainstSchema(
         AddressResponseSchema,
-        mapAddressToResponseDto(createdAddress),
+        addressDto,
       ),
       201,
     );
@@ -58,10 +60,11 @@ export const handleAddressGet = async (c: Context) => {
       404,
     );
   }
+  const addressDto = await mapAddressToResponseDto(address);
   return c.json(
     validateResponseAgainstSchema(
       AddressResponseSchema,
-      mapAddressToResponseDto(address),
+      addressDto,
     ),
     200,
   );
