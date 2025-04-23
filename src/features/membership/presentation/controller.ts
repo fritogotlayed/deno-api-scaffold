@@ -3,16 +3,16 @@ import {
   createMembership,
   getMembership,
   MembershipExistsError,
-} from '../../core/membership/membershipUseCases.ts';
-import { getMembershipRepoDrizzle } from '../../infrastructure/membershipRepoDrizzle.ts';
-import { getDb } from '../../middlewares/use-drizzle-postgres.ts';
+} from '../core/membershipUseCases.ts';
+import { getMembershipRepoDrizzle } from '../infrastructure/membershipRepoDrizzle.ts';
+import { getDb } from '../../../middlewares/use-drizzle-postgres.ts';
 import {
   CreateTeamMembershipRequestSchema,
   CreateUserMembershipRequestSchema,
   MembershipResponseSchema,
 } from './schema.ts';
-import { validateResponseAgainstSchema } from '../../shared/schema-validation/validate-response-against-schema.ts';
-import { ErrorResponseSchema } from '../../shared/schema/error-response.ts';
+import { validateResponseAgainstSchema } from '../../../shared/schema-validation/validate-response-against-schema.ts';
+import { ErrorResponseSchema } from '../../../shared/schema/error-response.ts';
 import { mapMembershipToResponseDto } from './mapper.ts';
 
 const createTeamMembership = async (

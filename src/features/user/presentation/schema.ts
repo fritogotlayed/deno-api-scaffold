@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { LinksFragment } from '../../shared/schema/link-fragments.ts';
+import { LinksFragment } from '../../../shared/schema/link-fragments.ts';
 
 export const ParamsSchema = z.object({
   userId: z.string(),

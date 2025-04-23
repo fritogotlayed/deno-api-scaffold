@@ -1,8 +1,8 @@
 import { eq } from 'drizzle-orm';
 import { NodePgDatabase } from 'drizzle-orm/node-postgres';
-import { TeamRepository } from '../core/team/teamRepo.ts';
-import { teams } from '../db/schema.ts';
-import { Team } from '../core/team/teamTypes.ts';
+import { TeamRepository } from '../core/teamRepo.ts';
+import { teams } from '../../../db/schema.ts';
+import { Team } from '../core/teamTypes.ts';
 
 export function getTeamRepoDrizzle(db: NodePgDatabase): TeamRepository {
   return {

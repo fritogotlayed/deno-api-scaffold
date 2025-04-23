@@ -1,7 +1,7 @@
 import { createRoute } from '@hono/zod-openapi';
 import { handleCreateTeam, handleGetTeam } from './controller.ts';
-import { createOpenApiApp } from '../../shared/schema-validation/create-open-api-app.ts';
-import { ErrorResponseSchema } from '../../shared/schema/error-response.ts';
+import { createOpenApiApp } from '../../../shared/schema-validation/create-open-api-app.ts';
+import { ErrorResponseSchema } from '../../../shared/schema/error-response.ts';
 import {
   CreateTeamRequestSchema,
   ParamsSchema,

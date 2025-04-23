@@ -1,8 +1,8 @@
 import { and, eq } from 'drizzle-orm';
 import { NodePgDatabase } from 'drizzle-orm/node-postgres';
-import { MembershipRepository } from '../core/membership/membershipRepo.ts';
-import { membership } from '../db/schema.ts';
-import { Membership } from '../core/membership/membershipTypes.ts';
+import { MembershipRepository } from '../core/membershipRepo.ts';
+import { membership } from '../../../db/schema.ts';
+import { Membership } from '../core/membershipTypes.ts';
 
 export function getMembershipRepoDrizzle(
   db: NodePgDatabase,

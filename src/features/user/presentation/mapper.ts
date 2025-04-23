@@ -1,7 +1,7 @@
 import { z } from '@hono/zod-openapi';
-import { User } from '../../core/user/userTypes.ts';
+import { User } from '../core/userTypes.ts';
 import { UserResponseSchema } from './schema.ts';
-import { FeatureFlagsClient } from '../../feature-flags-client.ts';
+import { FeatureFlagsClient } from '../../../feature-flags-client.ts';
 
 export type UserResponseDto = z.infer<typeof UserResponseSchema>;
 

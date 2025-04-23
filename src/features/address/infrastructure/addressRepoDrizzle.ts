@@ -1,8 +1,8 @@
 import { eq } from 'drizzle-orm';
 import { NodePgDatabase } from 'drizzle-orm/node-postgres';
-import { AddressRepository } from '../core/address/addressRepo.ts';
-import { address } from '../db/schema.ts';
-import { Address } from '../core/address/addressTypes.ts';
+import { AddressRepository } from '../core/addressRepo.ts';
+import { address } from '../../../db/schema.ts';
+import { Address } from '../core/addressTypes.ts';
 
 export function getAddressRepoDrizzle(db: NodePgDatabase): AddressRepository {
   return {

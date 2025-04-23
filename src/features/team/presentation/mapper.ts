@@ -1,12 +1,12 @@
 import { z } from '@hono/zod-openapi';
 import { TeamResponseSchema } from './schema.ts';
-import { Team } from '../../core/team/teamTypes.ts';
-import { Address } from '../../core/address/addressTypes.ts';
+import { Team } from '../core/teamTypes.ts';
+import { Address } from '../../address/core/addressTypes.ts';
 import {
   AddressResponseFragmentDTO,
   mapAddressToResponseFragmentDto,
-} from '../../shared/address/mapper.ts';
-import { FeatureFlagsClient } from '../../feature-flags-client.ts';
+} from '../../../shared/address/mapper.ts';
+import { FeatureFlagsClient } from '../../../feature-flags-client.ts';
 
 export type TeamResponseDto = z.infer<typeof TeamResponseSchema>;
 

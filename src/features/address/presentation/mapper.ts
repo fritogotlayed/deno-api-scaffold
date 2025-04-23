@@ -1,8 +1,8 @@
 import { z } from '@hono/zod-openapi';
 import { AddressResponseSchema } from './schema.ts';
-import { Address } from '../../core/address/addressTypes.ts';
-import { mapAddressToResponseFragmentDto } from '../../shared/address/mapper.ts';
-import { FeatureFlagsClient } from '../../feature-flags-client.ts';
+import { Address } from '../core/addressTypes.ts';
+import { mapAddressToResponseFragmentDto } from '../../../shared/address/mapper.ts';
+import { FeatureFlagsClient } from '../../../feature-flags-client.ts';
 
 // Define the shape of your DTO
 export type AddressResponseDTO = z.infer<typeof AddressResponseSchema>;

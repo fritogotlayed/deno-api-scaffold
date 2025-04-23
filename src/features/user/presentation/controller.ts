@@ -1,15 +1,11 @@
 import { Context } from 'hono';
-import {
-  createUser,
-  getUser,
-  UserExistsError,
-} from '../../core/user/userUseCases.ts';
-import { getUserRepoDrizzle } from '../../infrastructure/userRepoDrizzle.ts';
-import { getDb } from '../../middlewares/use-drizzle-postgres.ts';
+import { createUser, getUser, UserExistsError } from '../core/userUseCases.ts';
+import { getUserRepoDrizzle } from '../infrastructure/userRepoDrizzle.ts';
+import { getDb } from '../../../middlewares/use-drizzle-postgres.ts';
 import { mapUserToResponseDto } from './mapper.ts';
 import { CreateUserRequestSchema, UserResponseSchema } from './schema.ts';
-import { validateResponseAgainstSchema } from '../../shared/schema-validation/validate-response-against-schema.ts';
-import { ErrorResponseSchema } from '../../shared/schema/error-response.ts';
+import { validateResponseAgainstSchema } from '../../../shared/schema-validation/validate-response-against-schema.ts';
+import { ErrorResponseSchema } from '../../../shared/schema/error-response.ts';
 
 export const handleCreateUser = async (c: Context) => {
   const body = await c.req.json();

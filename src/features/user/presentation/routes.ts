@@ -1,40 +1,40 @@
 import { createRoute } from '@hono/zod-openapi';
-import { handleAddressCreate, handleAddressGet } from './controller.ts';
-import { createOpenApiApp } from '../../shared/schema-validation/create-open-api-app.ts';
-import { ErrorResponseSchema } from '../../shared/schema/error-response.ts';
+import { handleCreateUser, handleGetUser } from './controller.ts';
+import { createOpenApiApp } from '../../../shared/schema-validation/create-open-api-app.ts';
 import {
-  AddressResponseSchema,
-  CreateAddressRequestSchema,
+  CreateUserRequestSchema,
   ParamsSchema,
+  UserResponseSchema,
 } from './schema.ts';
+import { ErrorResponseSchema } from '../../../shared/schema/error-response.ts';
 
-const addressRoutes = createOpenApiApp();
+const userRoutes = createOpenApiApp();
 
-addressRoutes
+userRoutes
   .openapi(
     createRoute({
       method: 'post',
-      path: '/addresses',
-      tags: ['Address'],
+      path: '/users',
+      tags: ['User'],
       middleware: [
         // TODO: any request specific middleware goes here. Think things like id converters
       ] as const,
       request: {
         body: {
-          description: 'Creates a new address in the system',
+          description: 'Creates a new user in the system',
           content: {
             'application/json': {
-              schema: CreateAddressRequestSchema,
+              schema: CreateUserRequestSchema,
             },
           },
         },
       },
       responses: {
         201: {
-          description: 'Address created',
+          description: 'User created',
           content: {
             'application/json': {
-              schema: AddressResponseSchema,
+              schema: UserResponseSchema,
             },
           },
         },
@@ -48,13 +48,13 @@ addressRoutes
         },
       },
     }),
-    handleAddressCreate,
+    handleCreateUser,
   )
   .openapi(
     createRoute({
       method: 'get',
-      path: '/addresses/:addressId',
-      tags: ['Address'],
+      path: '/users/:userId',
+      tags: ['User'],
       middleware: [
         // TODO: any request specific middleware goes here. Think things like id converters
       ] as const,
@@ -63,15 +63,15 @@ addressRoutes
       },
       responses: {
         200: {
-          description: 'Address found',
+          description: 'User found',
           content: {
             'application/json': {
-              schema: AddressResponseSchema,
+              schema: UserResponseSchema,
             },
           },
         },
         404: {
-          description: 'Address not found',
+          description: 'User not found',
           content: {
             'application/json': {
               schema: ErrorResponseSchema,
@@ -80,7 +80,7 @@ addressRoutes
         },
       },
     }),
-    handleAddressGet,
+    handleGetUser,
   );
 
-export { addressRoutes };
+export { userRoutes };

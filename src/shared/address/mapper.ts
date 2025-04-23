@@ -1,5 +1,5 @@
 import { z } from '@hono/zod-openapi';
-import { Address } from '../../core/address/addressTypes.ts';
+import { Address } from '../../features/address/core/addressTypes.ts';
 import { AddressResponseFragment } from '../schema/address.ts';
 
 export type AddressResponseFragmentDTO = z.infer<

@@ -1,11 +1,11 @@
 import { TeamRepository } from './teamRepo.ts';
 import { Team } from './teamTypes.ts';
-import { AddressRepository } from '../address/addressRepo.ts';
+import { AddressRepository } from '../../address/core/addressRepo.ts';
 import {
   createAddress,
   InvalidAddressError,
-} from '../address/addressUseCases.ts';
-import { Address } from '../address/addressTypes.ts';
+} from '../../address/core/addressUseCases.ts';
+import { Address } from '../../address/core/addressTypes.ts';
 
 export class TeamExistsError extends Error {
   constructor(name: string) {

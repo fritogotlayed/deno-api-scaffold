@@ -1,7 +1,7 @@
 import { z } from '@hono/zod-openapi';
-import { Membership } from '../../core/membership/membershipTypes.ts';
+import { Membership } from '../core/membershipTypes.ts';
 import { MembershipResponseSchema } from './schema.ts';
-import { FeatureFlagsClient } from '../../feature-flags-client.ts';
+import { FeatureFlagsClient } from '../../../feature-flags-client.ts';
 
 // Define the shape of your DTO
 export type MembershipResponseDto = z.infer<typeof MembershipResponseSchema>;

@@ -2,14 +2,14 @@
 import '@std/dotenv/load';
 import { swaggerUI } from '@hono/swagger-ui';
 import { NodePgDatabase } from 'drizzle-orm/node-postgres';
-import { userRoutes } from './features/user/routes.ts';
-import { teamRoutes } from './features/team/routes.ts';
+import { userRoutes } from './features/user/presentation/routes.ts';
+import { teamRoutes } from './features/team/presentation/routes.ts';
 import { useDrizzlePostgres } from './middlewares/use-drizzle-postgres.ts';
 import { DbConnectionOverrides } from './config/db.ts';
-import { membershipRoutes } from './features/membership/routes.ts';
+import { membershipRoutes } from './features/membership/presentation/routes.ts';
 // import { displayRoutesTree } from './display-routes-tree.ts';
 import { createOpenApiApp } from './shared/schema-validation/create-open-api-app.ts';
-import { addressRoutes } from './features/address/routes.ts';
+import { addressRoutes } from './features/address/presentation/routes.ts';
 
 export function createApp(
   {

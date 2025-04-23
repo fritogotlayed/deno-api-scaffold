@@ -1,14 +1,14 @@
 import { Context } from 'hono';
-import { validateResponseAgainstSchema } from '../../shared/schema-validation/validate-response-against-schema.ts';
-import { ErrorResponseSchema } from '../../shared/schema/error-response.ts';
+import { validateResponseAgainstSchema } from '../../../shared/schema-validation/validate-response-against-schema.ts';
+import { ErrorResponseSchema } from '../../../shared/schema/error-response.ts';
 import { AddressResponseSchema, CreateAddressRequestSchema } from './schema.ts';
-import { getDb } from '../../middlewares/use-drizzle-postgres.ts';
+import { getDb } from '../../../middlewares/use-drizzle-postgres.ts';
 import {
   createAddress,
   getAddressById,
   InvalidAddressError,
-} from '../../core/address/addressUseCases.ts';
-import { getAddressRepoDrizzle } from '../../infrastructure/addressRepoDrizzle.ts';
+} from '../core/addressUseCases.ts';
+import { getAddressRepoDrizzle } from '../infrastructure/addressRepoDrizzle.ts';
 import { mapAddressToResponseDto } from './mapper.ts';
 
 export const handleAddressCreate = async (c: Context) => {

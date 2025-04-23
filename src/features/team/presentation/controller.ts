@@ -1,18 +1,14 @@
 import { Context } from 'hono';
-import {
-  createTeam,
-  getTeam,
-  TeamExistsError,
-} from '../../core/team/teamUseCases.ts';
-import { getTeamRepoDrizzle } from '../../infrastructure/teamRepoDrizzle.ts';
-import { getDb } from '../../middlewares/use-drizzle-postgres.ts';
+import { createTeam, getTeam, TeamExistsError } from '../core/teamUseCases.ts';
+import { getTeamRepoDrizzle } from '../infrastructure/teamRepoDrizzle.ts';
+import { getDb } from '../../../middlewares/use-drizzle-postgres.ts';
 import { CreateTeamRequestSchema, TeamResponseSchema } from './schema.ts';
-import { validateResponseAgainstSchema } from '../../shared/schema-validation/validate-response-against-schema.ts';
-import { ErrorResponseSchema } from '../../shared/schema/error-response.ts';
-import { getAddressRepoDrizzle } from '../../infrastructure/addressRepoDrizzle.ts';
+import { validateResponseAgainstSchema } from '../../../shared/schema-validation/validate-response-against-schema.ts';
+import { ErrorResponseSchema } from '../../../shared/schema/error-response.ts';
+import { getAddressRepoDrizzle } from '../../address/infrastructure/addressRepoDrizzle.ts';
 import { mapTeamToResponseDto } from './mapper.ts';
-import { getAddressById } from '../../core/address/addressUseCases.ts';
-import { Address } from '../../core/address/addressTypes.ts';
+import { getAddressById } from '../../address/core/addressUseCases.ts';
+import { Address } from '../../address/core/addressTypes.ts';
 
 export const handleCreateTeam = async (c: Context) => {
   const body = await c.req.json();

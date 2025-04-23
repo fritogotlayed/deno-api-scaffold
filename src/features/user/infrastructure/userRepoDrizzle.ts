@@ -1,8 +1,8 @@
 import { eq } from 'drizzle-orm';
 import { NodePgDatabase } from 'drizzle-orm/node-postgres';
-import { UserRepository } from '../core/user/userRepo.ts';
-import { users } from '../db/schema.ts';
-import { User } from '../core/user/userTypes.ts';
+import { UserRepository } from '../core/userRepo.ts';
+import { users } from '../../../db/schema.ts';
+import { User } from '../core/userTypes.ts';
 
 export function getUserRepoDrizzle(db: NodePgDatabase): UserRepository {
   return {
