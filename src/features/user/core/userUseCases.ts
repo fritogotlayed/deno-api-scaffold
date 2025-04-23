@@ -24,3 +24,7 @@ export const createUser =
 export const getUser = (repo: UserRepository) => async (id: string) => {
   return await repo.findById(id);
 };
+
+export const listUsers = (repo: UserRepository) => async () => {
+  return await repo.findAll();
+};

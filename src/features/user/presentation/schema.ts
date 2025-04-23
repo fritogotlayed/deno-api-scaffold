@@ -18,3 +18,5 @@ export const UserResponseSchema = z.object({
 }).merge(
   LinksFragment,
 );
+
+export const UserListResponseSchema = z.array(UserResponseSchema);

@@ -25,5 +25,8 @@ export function getUserRepoDrizzle(db: NodePgDatabase): UserRepository {
         id: result[0].id,
       };
     },
+    findAll(): Promise<User[]> {
+      return db.select().from(users);
+    },
   } satisfies UserRepository;
 }

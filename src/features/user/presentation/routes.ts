@@ -1,9 +1,14 @@
 import { createRoute } from '@hono/zod-openapi';
-import { handleCreateUser, handleGetUser } from './controller.ts';
+import {
+  handleCreateUser,
+  handleGetUser,
+  handleListUsers,
+} from './controller.ts';
 import { createOpenApiApp } from '../../../shared/schema-validation/create-open-api-app.ts';
 import {
   CreateUserRequestSchema,
   ParamsSchema,
+  UserListResponseSchema,
   UserResponseSchema,
 } from './schema.ts';
 import { ErrorResponseSchema } from '../../../shared/schema/error-response.ts';
@@ -81,6 +86,27 @@ userRoutes
       },
     }),
     handleGetUser,
+  )
+  .openapi(
+    createRoute({
+      method: 'get',
+      path: '/users',
+      tags: ['User'],
+      middleware: [
+        // TODO: any request specific middleware goes here. Think things like id converters
+      ] as const,
+      responses: {
+        200: {
+          description: 'Users found',
+          content: {
+            'application/json': {
+              schema: UserListResponseSchema,
+            },
+          },
+        },
+      },
+    }),
+    handleListUsers,
   );
 
 export { userRoutes };

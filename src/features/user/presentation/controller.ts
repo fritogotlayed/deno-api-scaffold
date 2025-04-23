@@ -1,9 +1,18 @@
 import { Context } from 'hono';
-import { createUser, getUser, UserExistsError } from '../core/userUseCases.ts';
+import {
+  createUser,
+  getUser,
+  listUsers,
+  UserExistsError,
+} from '../core/userUseCases.ts';
 import { getUserRepoDrizzle } from '../infrastructure/userRepoDrizzle.ts';
 import { getDb } from '../../../middlewares/use-drizzle-postgres.ts';
 import { mapUserToResponseDto } from './mapper.ts';
-import { CreateUserRequestSchema, UserResponseSchema } from './schema.ts';
+import {
+  CreateUserRequestSchema,
+  UserListResponseSchema,
+  UserResponseSchema,
+} from './schema.ts';
 import { validateResponseAgainstSchema } from '../../../shared/schema-validation/validate-response-against-schema.ts';
 import { ErrorResponseSchema } from '../../../shared/schema/error-response.ts';
 
@@ -54,6 +63,18 @@ export const handleGetUser = async (c: Context) => {
   const userDto = await mapUserToResponseDto({ user: user });
   return c.json(
     validateResponseAgainstSchema(UserResponseSchema, userDto),
+    200,
+  );
+};
+
+export const handleListUsers = async (c: Context) => {
+  const db = getDb(c);
+  const users = await listUsers(getUserRepoDrizzle(db))();
+  const usersDto = await Promise.all(
+    users.map(async (user) => await mapUserToResponseDto({ user })),
+  );
+  return c.json(
+    validateResponseAgainstSchema(UserListResponseSchema, usersDto),
     200,
   );
 };
