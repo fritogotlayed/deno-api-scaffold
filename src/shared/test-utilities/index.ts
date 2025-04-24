@@ -2,8 +2,8 @@ import {
   DbConnectionOverrides,
   isTruthyEnvVar,
   usingDbClient,
-} from '../../../src/config/db.ts';
-import { createApp } from '../../../src/main.ts';
+} from '../../config/db.ts';
+import { createApp } from '../../main.ts';
 
 export function generateTestDbName(): string {
   const full = crypto.randomUUID().replaceAll(/-/g, '');

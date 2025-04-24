@@ -1,12 +1,9 @@
 import { afterAll, afterEach, beforeAll, describe, it } from '@std/testing/bdd';
 import { expect } from '@std/expect';
 import { OpenAPIHono } from '@hono/zod-openapi';
-import { integrationTestSetup } from '../../utilities/index.ts';
-import {
-  createDrizzleDbConnection,
-  usingDbClient,
-} from '../../../../src/config/db.ts';
-import { users } from '../../../../src/db/schema.ts';
+import { integrationTestSetup } from '../../shared/test-utilities/index.ts';
+import { createDrizzleDbConnection, usingDbClient } from '../../config/db.ts';
+import { users } from '../../db/schema.ts';
 
 describe('user', () => {
   let app: OpenAPIHono;
